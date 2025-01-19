@@ -149,19 +149,19 @@
                     <div class="card-body">
                         <h3 class="card-title text-center text-uppercase" style="font-size: 28px;">Create Your Poll</h3>
 
-                        <!-- Input for adding new options -->
+                        
                         <div class="form-group mt-4">
                             <input type="text" id="newOptionInput" class="form-control"
                                 placeholder="Add your own option">
                             <button id="addOptionButton" class="btn btn-secondary mt-2 w-100">Add New Option</button>
                         </div>
 
-                        <!-- Poll options will be dynamically added here -->
+                        
                         <div class="poll-options-list" id="pollOptions"></div>
 
                         <hr>
 
-                        <!-- Poll Results -->
+                       
                         <h4 class="text-center">Live Poll Results</h4>
                         <div id="results" class="text-center">
                             <p>Choose an option to vote!</p>
@@ -169,7 +169,7 @@
 
                         <hr>
 
-                        <!-- Reset Poll Button -->
+                        
                         <div class="form-group text-center">
                             <button id="resetPoll" class="btn btn-danger w-100">Reset Poll</button>
                         </div>
@@ -180,7 +180,7 @@
         </div>
     </div>
 
-    <!-- Modal for Option Deletion Confirmation -->
+   
     <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
@@ -200,24 +200,24 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS & jQuery -->
+    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Custom JS -->
+    
     <script>
-        const pollData = {};  // Store the options and votes in memory
+        const pollData = {};  
         const resultsContainer = document.getElementById('results');
         const pollOptionsContainer = document.getElementById('pollOptions');
         const newOptionInput = document.getElementById('newOptionInput');
         let optionToDelete = null;
 
-        // Function to update live poll results
+      
         function updateResults() {
             resultsContainer.innerHTML = '';
             let totalVotes = 0;
 
-            // Calculate total votes
+          
             for (let option in pollData) {
                 totalVotes += pollData[option];
             }
@@ -225,7 +225,7 @@
             if (totalVotes === 0) {
                 resultsContainer.innerHTML = '<p>No votes yet. Please vote to see the results!</p>';
             } else {
-                // Display results for each option
+              
                 for (let option in pollData) {
                     const percentage = ((pollData[option] / totalVotes) * 100).toFixed(2);
                     resultsContainer.innerHTML += `
@@ -240,48 +240,48 @@
             }
         }
 
-        // Function to handle voting for an option
+       
         function voteForOption(option) {
-            pollData[option]++; // Increment the vote count for the option
-            updateResults(); // Update the results on the page
+            pollData[option]++; 
+            updateResults(); 
         }
 
-        // Function to add new poll option
+       
         document.getElementById('addOptionButton').addEventListener('click', function () {
             const newOption = newOptionInput.value.trim();
 
             if (newOption && !pollData[newOption]) {
-                // Add the new option to the poll
+                
                 pollData[newOption] = 0;
 
-                // Create the button for the new option
+               
                 const newButton = document.createElement('button');
                 newButton.classList.add('btn', 'btn-primary', 'w-100', 'mt-2', 'poll-option');
                 newButton.textContent = newOption;
                 newButton.setAttribute('data-option', newOption);
 
-                // Create delete icon for the new option
+                
                 const deleteIcon = document.createElement('span');
                 deleteIcon.classList.add('delete-option');
                 deleteIcon.textContent = 'X';
                 newButton.appendChild(deleteIcon);
 
-                // Append the new option button to the poll options list
+                
                 pollOptionsContainer.appendChild(newButton);
 
-                // Add click event to vote for the new option
+               
                 newButton.addEventListener('click', function () {
-                    voteForOption(newOption); // Vote for the selected option
+                    voteForOption(newOption); 
                 });
 
-                // Add click event for delete icon
+              
                 deleteIcon.addEventListener('click', function (event) {
-                    event.stopPropagation(); // Prevent voting when deleting
+                    event.stopPropagation(); 
                     optionToDelete = newOption;
                     new bootstrap.Modal(document.getElementById('confirmDeleteModal')).show();
                 });
 
-                // Clear the input field
+               
                 newOptionInput.value = '';
                 updateResults();
             } else {
@@ -289,13 +289,13 @@
             }
         });
 
-        // Function to confirm deletion of an option
+        
         document.getElementById('confirmDeleteButton').addEventListener('click', function () {
             if (optionToDelete) {
-                delete pollData[optionToDelete]; // Remove option from pollData
+                delete pollData[optionToDelete]; 
                 updateResults();
 
-                // Remove the button associated with the option
+                
                 const optionButtons = document.querySelectorAll('.poll-option');
                 optionButtons.forEach(button => {
                     if (button.getAttribute('data-option') === optionToDelete) {
@@ -303,25 +303,25 @@
                     }
                 });
 
-                optionToDelete = null; // Reset deletion state
-                bootstrap.Modal.getInstance(document.getElementById('confirmDeleteModal')).hide(); // Close the modal
+                optionToDelete = null; 
+                bootstrap.Modal.getInstance(document.getElementById('confirmDeleteModal')).hide(); 
             }
         });
 
-        // Reset poll button functionality
+        
         document.getElementById('resetPoll').addEventListener('click', function () {
             if (confirm("Are you sure you want to reset the poll?")) {
-                // Reset poll data
+               
                 for (let option in pollData) {
-                    pollData[option] = 0; // Reset all vote counts
+                    pollData[option] = 0;
                 }
-                updateResults(); // Update results
-                // Remove all option buttons
+                updateResults(); 
+               
                 document.querySelectorAll('.poll-option').forEach(button => button.remove());
             }
         });
 
-        // Initial results update
+        
         updateResults();
     </script>
 
